@@ -27,15 +27,26 @@ class MyApp extends App {
 }
 
 export default withApollo(({ initialState }) => {
+  const linkOptions = {
+    fetch, // Switches between unfetch & node-fetch for client & server.
+    uri: process.env.GRAPHQL_URL
+  }
+
+  const defaultOptions = {}
+  if (typeof window === 'undefined') {
+    linkOptions.headers = {
+      'X-API-Key': process.env.API_KEY
+    }
+  } else {
+    defaultOptions.query = {
+      fetchPolicy: 'cache-only'
+    }
+  }
+
   return new ApolloClient({
+    defaultOptions,
     link: persistedQueriesLink.concat(
-      createHttpLink({
-        fetch, // Switches between unfetch & node-fetch for client & server.
-        uri: process.env.GRAPHQL_URL,
-        headers: {
-          'X-API-Key': process.env.API_KEY
-        }
-      })
+      createHttpLink(linkOptions)
     ),
     cache: new InMemoryCache()
       // rehydrate the cache using the initial data passed from the server:

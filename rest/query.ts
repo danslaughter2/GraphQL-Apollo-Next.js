@@ -1,5 +1,4 @@
 import * as Apollo from '@apollo/client'
-import { NetworkStatus } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import { ApolloQueryResult, QueryResult } from '@apollo/react-hooks'
 import { OperationVariables } from '@apollo/client/core'
@@ -8,14 +7,7 @@ export const generateUseQuery = <TData = any, TVariables = OperationVariables>(r
   => QueryResult<TData, TVariables>) => (baseOptions?: Apollo.QueryHookOptions<TData, TVariables>):
   ApolloQueryResult<TData> | QueryResult<TData, TVariables> => {
 
-  const [response, setResponse] = useState<ApolloQueryResult<TData>>(typeof window === 'undefined'
-    ? originalQuery(baseOptions)
-    : {
-      data: undefined,
-      loading: true,
-      networkStatus: NetworkStatus.loading
-    }
-  )
+  const [response, setResponse] = useState<ApolloQueryResult<TData>>(originalQuery(baseOptions))
 
   const searchParams = new URLSearchParams()
 
@@ -27,7 +19,7 @@ export const generateUseQuery = <TData = any, TVariables = OperationVariables>(r
     if (!response.data) {
       fetch(`${process.env.NEXT_PUBLIC_HOST}/api/${restApiPath}?${searchParams.toString()}`)
       .then(response => response.json())
-      .then(d => setResponse(d))
+      .then(r => setResponse(r))
     }
   }, [])
 
