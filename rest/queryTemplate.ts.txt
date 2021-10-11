@@ -6,7 +6,7 @@ import { ApolloQueryResult, QueryResult } from '@apollo/react-hooks'
 import { generateUseQuery } from '../rest/query'
 
 const useQuery = generateUseQuery('${restApiPath}', originalQuery)
-export const useHelloBrightspotQuery = (baseOptions?: Apollo.QueryHookOptions<${queryTypeName}, ${queryVariablesTypeName}>):
+export const use${queryTypeName} = (baseOptions?: Apollo.QueryHookOptions<${queryTypeName}, ${queryVariablesTypeName}>):
   ApolloQueryResult<${queryTypeName}> | QueryResult<${queryTypeName}, ${queryVariablesTypeName}> => {
 
   return useQuery(baseOptions)
